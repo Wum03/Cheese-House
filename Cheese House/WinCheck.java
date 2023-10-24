@@ -23,6 +23,7 @@ public class WinCheck {
 
             //vertical
             if (win == null) {
+                win = winner(x, y, 0, 1, i, symbols);
             }
 
             if (win != null) {
