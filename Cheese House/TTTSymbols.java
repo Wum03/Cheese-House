@@ -27,7 +27,7 @@ public class TTTSymbols implements ITTTObj{
         String symbolType = this.type == 0 ? "cheese" : "house";
 
         try {
-            symbol = ImageIO.read(new File("big_XO/" + symbolType + ".png"));
+            symbol = ImageIO.read(new File("Cheese House/big_XO/" + symbolType + ".png"));
         } catch (Exception e) {
             e.printStackTrace();
         }    
