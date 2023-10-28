@@ -164,7 +164,7 @@ public class TTTGrid implements ITTTObj {
 
 
     public PlaceTTT mouseReleased(MouseEvent e, int symbolIndex) {
-        this.symbolIndex = symbolIndex;
+        setSymbolIndex(symbolIndex);
         return mouseReleased(e);
     }
 
@@ -191,7 +191,7 @@ public class TTTGrid implements ITTTObj {
 
     
     public void placeSymbol(int x, int y, int symbolIndex) {
-        this.symbolIndex = symbolIndex;
+        setSymbolIndex(symbolIndex);
         placeSymbol(x, y);
 
 
@@ -266,6 +266,14 @@ public class TTTGrid implements ITTTObj {
 
     public int getTurn() {   // Has to be equal to something but what?
         return symbolIndex % 2;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setSymbolIndex(int symbolIndex){
+        this.symbolIndex = symbolIndex;
     }
 
 

@@ -1,17 +1,17 @@
 import java.util.ArrayList;
 
-public class MiniMax {
+public class TTTMiniMax {
 
     private int bestMove = 0;
 
     public int getBestMove(TTTSymbols[][] symbols, int requester) {
     bestMove = 0;
-    minimax(symbols, requester, true, 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    tttminimax(symbols, requester, true, 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
 
     return bestMove;
     }
                         
-    private int minimax(TTTSymbols[][] symbols, int requester, boolean requesterMove, int depth, int alpha, int beta) {
+    private int tttminimax(TTTSymbols[][] symbols, int requester, boolean requesterMove, int depth, int alpha, int beta) {
 
         int winner = WinCheck.getWinType(symbols);
         if (winner >= 0 ||getSymbolsPlacedSize(symbols) == Main.SIZE ) {               
@@ -32,7 +32,7 @@ public class MiniMax {
 
             int symbol = requesterMove ? requester : requester + 1;
             symbols [x][y] = new TTTSymbols(symbol);
-            score = minimax(symbols, requester, !requesterMove, depth, alpha, beta);
+            score = tttminimax(symbols, requester, !requesterMove, depth, alpha, beta);
             scores.add(score);
             symbols [x][y] = null;
 

@@ -1,23 +1,60 @@
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 
-public class AI implements ITTTObj {
+public class TTTAI implements ITTTObj {
 
-    private MiniMax minimax;
-    private TTTGrid grid;
+    private TTTMiniMax tttminimax;
+    private TTTGrid tttgrid;
+    private TTTGrid bigGrid; //main
+    private TTTUltimate ultimate;
 
-    public AI(TTTGrid grid) {
-        this.grid = grid;
-        minimax = new MiniMax();
+    private int interTime = 5;
+    private int currentTime;
+    private boolean hasTimerStarted;
 
+    private int currentTurn = 1;
+
+
+
+    public TTTAI(TTTGrid grid, TTTUltimate ultimate) {
+        this.bigGrid = grid;
+        tttminimax = new TTTMiniMax();
+        this.ultimate = ultimate;
     }
 
     public void makeMove(){
-        grid.placeSymbol(minimax.getBestMove(grid.getSymbols(), grid.getTurn()));
+        currentTime = 0;
+        hasTimerStarted = true;
+    }
+
+    public void setTurn(TTTGrid grid, int turn) {
+        this.tttgrid = grid;
+        this.currentTurn = turn;
     }
 
 
     @Override
     public void update(float deltaTime) {
+        if (!hasTimerStarted) {
+            return;
+        }
+
+        currentTime += deltaTime;
+        if (currentTime >= interTime) {
+            tttgrid.setSymbolIndex(currentTurn);
+            int move = tttminimax.getBestMove(tttgrid.getSymbols(), currentTurn);
+            int x = move % Main.ROWS;
+            int y = move/ Main.ROWS;
+            tttgrid.placeSymbol(move);
+
+            ultimate.setActiveGrid(x, y);
+            hasTimerStarted = false;
+
+            if(tttgrid.getWinner() >= 0) {
+                bigGrid.placeSymbol(tttgrid.getX(), tttgrid.getY(), tttgrid.getWinner());
+            }
+        }
+ 
 
     }
 
@@ -25,5 +62,30 @@ public class AI implements ITTTObj {
     public void render (Graphics2D graphicsRender) {
 
     }
+
+    public boolean isMoving(){
+        return hasTimerStarted;
+    }
+
+    public void makeMove(ArrayList<TTTGrid> grids, boolean multipleGridsCurrently, int turn) {
+        this.currentTurn = turn;
+        if(multipleGridsCurrently) {
+            int bestBigGridMove = tttminimax.getBestMove(bigGrid.getSymbols(), turn);
+            setTurn(grids.get(bestBigGridMove), turn);
+
+
+        }
+        else {
+            for (TTTGrid tttgrid : grids) {
+                if(tttgrid.isActive()) {
+                    setTurn(tttgrid, turn);
+                }
+            }
+
+        }
+        makeMove();
+    }
+
+
     
 }
