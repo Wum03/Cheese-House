@@ -12,7 +12,7 @@ public class TTTAI implements ITTTObj {
     private int currentTime;
     private boolean hasTimerStarted;
 
-    private int currentTurn = 1;
+    private int currentTurn = 0;
 
 
 
@@ -70,7 +70,7 @@ public class TTTAI implements ITTTObj {
     public void makeMove(ArrayList<TTTGrid> grids, boolean multipleGridsCurrently, int turn) {
         this.currentTurn = turn;
         if(multipleGridsCurrently) {
-            int bestBigGridMove = tttminimax.getBestMove(bigGrid.getSymbols(), turn);
+            int bestBigGridMove = tttminimax.getBestMove(bigGrid.getSymbols(),turn);
             setTurn(grids.get(bestBigGridMove), turn);
 
 

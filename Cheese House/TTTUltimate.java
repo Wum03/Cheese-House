@@ -22,9 +22,11 @@ public class TTTUltimate implements ITTTObj {
         }
 
         bigGrid = new TTTGrid(0, 0, Main.WIDTH, false, false);
-
+        
         tttai = new TTTAI(bigGrid, this);
-        symbolIndex++;
+
+
+
         
     }
 
@@ -111,6 +113,7 @@ public class TTTUltimate implements ITTTObj {
 
         if(symbolIndex % 2 == 1) {
             tttai.makeMove(grids, multipleGridsCurrently, symbolIndex);
+            symbolIndex++;
         }
     }
 
