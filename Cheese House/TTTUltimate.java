@@ -7,7 +7,11 @@ public class TTTUltimate implements ITTTObj {
 
     private ArrayList<TTTGrid> grids = new ArrayList<TTTGrid>(Main.SIZE);
     private TTTGrid bigGrid;
+    private AI ai;
+
+
     private int symbolIndex = 0;
+
 
     public TTTUltimate() {
         for (int i = 0; i < Main.SIZE; i++) {
@@ -18,6 +22,8 @@ public class TTTUltimate implements ITTTObj {
         }
 
         bigGrid = new TTTGrid(0, 0, Main.WIDTH, false, false);
+
+        ai = new AI(bigGrid);
         
     }
 

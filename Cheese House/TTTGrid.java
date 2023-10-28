@@ -214,6 +214,8 @@ public class TTTGrid implements ITTTObj {
         
     }
 
+    
+
     public void reset() {
         for (int x = 0; x < symbols.length; x++) {
             for (int y = 0; y < symbols.length; y++) {
@@ -260,6 +262,10 @@ public class TTTGrid implements ITTTObj {
 
     public void setActive(boolean isActive) {
         this.isActive = isActive;
+    }
+
+    public int getTurn() {   // Has to be equal to something but what?
+        return symbolIndex % 2;
     }
 
 

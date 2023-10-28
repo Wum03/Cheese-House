@@ -37,6 +37,14 @@ public class TTTSymbols implements ITTTObj{
  
 
 
+    public TTTSymbols(int type) {
+        this.type = type % 2;
+
+    }
+
+
+
+
     @Override
     public void update(float deltaTime) {
     }

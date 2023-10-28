@@ -72,5 +72,15 @@ public class WinCheck {
 
         return win.size() >= Main.WIN ? win : null;
     }
-    
+
+    public static int getWinType(TTTSymbols[][] symbols) {
+        ArrayList<TTTSymbols> match = winChecker(symbols);
+
+        if (match == null) {
+            return -1;
+        }
+        return match.get(0).getType();
+    }
+
+
 }

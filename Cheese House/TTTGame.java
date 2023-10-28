@@ -34,16 +34,6 @@ public class TTTGame extends PanelTTT implements MouseListener, MouseMotionListe
     }
 
 
-
-
-
-
-
-
-
-
-
-
     @Override
     public void mouseDragged(MouseEvent e) {
         // TODO Auto-generated method stub
