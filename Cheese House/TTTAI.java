@@ -8,7 +8,7 @@ public class TTTAI implements ITTTObj {
     private TTTGrid bigGrid; //main
     private TTTUltimate ultimate;
 
-    private int interTime = 5;
+    private int interTime = 20;
     private int currentTime;
     private boolean hasTimerStarted;
 
