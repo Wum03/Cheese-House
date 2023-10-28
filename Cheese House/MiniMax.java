@@ -6,16 +6,16 @@ public class MiniMax {
 
     public int getBestMove(TTTSymbols[][] symbols, int requester) {
     bestMove = 0;
-    minimax(symbols, requester, true, 0);
+    minimax(symbols, requester, true, 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
 
     return bestMove;
     }
-                         // PlaceTTT instead of Marker.
-    private int minimax(TTTSymbols[][] symbols, int requester, boolean requesterMove, int depth) {
+                        
+    private int minimax(TTTSymbols[][] symbols, int requester, boolean requesterMove, int depth, int alpha, int beta) {
 
         int winner = WinCheck.getWinType(symbols);
-        if (winner >= 0 ||getSymbolsPlacedSize(symbols) == Main.SIZE ) {               // GETMARKERSPLACED?.
-            return getFieldScore(symbols, requester, depth); // GETFIELDSCORE ?.
+        if (winner >= 0 ||getSymbolsPlacedSize(symbols) == Main.SIZE ) {               
+            return getFieldScore(symbols, requester, depth); 
         }
 
         ArrayList<Integer> scores = new ArrayList<Integer>();
@@ -32,9 +32,24 @@ public class MiniMax {
 
             int symbol = requesterMove ? requester : requester + 1;
             symbols [x][y] = new TTTSymbols(symbol);
-            score = minimax(symbols, requester, !requesterMove, depth);
+            score = minimax(symbols, requester, !requesterMove, depth, alpha, beta);
             scores.add(score);
             symbols [x][y] = null;
+
+            if(requesterMove) {
+                int maxVal = Math.max(Integer.MIN_VALUE, score);
+                alpha = Math.max(alpha, maxVal);
+                if (alpha > beta) {
+                    return maxVal;
+                }
+            } else {
+                int minVal = Math.min(Integer.MAX_VALUE, score);
+                beta = Math.min(beta, minVal);
+                if(beta < alpha) {
+                    return minVal;
+                }
+            }
+            
 
         }
 
