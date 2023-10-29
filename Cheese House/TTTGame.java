@@ -6,19 +6,28 @@ import java.awt.event.MouseMotionListener;
 public class TTTGame extends PanelTTT implements MouseListener, MouseMotionListener {
 
     private TTTUltimate ultimate;
+    private TTTGrid tttGrid;
     
     public TTTGame(Color color) {
         super(color);
-
-        ultimate = new TTTUltimate();
+        if (Main.GoUltimate) {
+            ultimate = new TTTUltimate();
+        } else {
+            tttGrid = new TTTGrid();
+        }
+        
 
     }
 
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-
-        ultimate.update(deltaTime);
+        if (Main.GoUltimate) {
+            ultimate.update(deltaTime);
+        } else {
+            tttGrid.update(deltaTime);
+        }
+        
         //update elements
     }
 
@@ -26,22 +35,15 @@ public class TTTGame extends PanelTTT implements MouseListener, MouseMotionListe
     public void render() {
         super.render();
 
-        ultimate.render(graphicsRender);
-        //update elements
+        if (Main.GoUltimate) {
+            ultimate.render(graphicsRender);
+        } else {
+            tttGrid.render(graphicsRender);
+        }
 
         
         super.clear();
     }
-
-
-
-
-
-
-
-
-
-
 
 
     @Override
@@ -53,7 +55,11 @@ public class TTTGame extends PanelTTT implements MouseListener, MouseMotionListe
     @Override
     public void mouseMoved(MouseEvent e) {
         // TODO Auto-generated method stub
-        ultimate.mouseMoved(e);
+        if (Main.GoUltimate) {
+            ultimate.mouseMoved(e);
+        } else {
+            tttGrid.mouseMoved(e);
+        }
     }
 
     @Override
@@ -68,8 +74,17 @@ public class TTTGame extends PanelTTT implements MouseListener, MouseMotionListe
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        
 
-        ultimate.mouseReleased(e);
+
+        if (Main.GoUltimate) {
+            ultimate.mouseReleased(e);
+        } else {
+            if (tttGrid.gameEnded()){
+                tttGrid.reset();
+            }
+            tttGrid.mouseReleased(e);
+        }
         
     }
 

@@ -7,7 +7,11 @@ public class TTTUltimate implements ITTTObj {
 
     private ArrayList<TTTGrid> grids = new ArrayList<TTTGrid>(Main.SIZE);
     private TTTGrid bigGrid;
+    private TTTAI tttai;
+
+
     private int symbolIndex = 0;
+
 
     public TTTUltimate() {
         for (int i = 0; i < Main.SIZE; i++) {
@@ -18,6 +22,13 @@ public class TTTUltimate implements ITTTObj {
         }
 
         bigGrid = new TTTGrid(0, 0, Main.WIDTH, false, false);
+        if (Main.EnableAI) {
+         tttai = new TTTAI(bigGrid, this);
+        }
+        
+        
+
+
         
     }
 
@@ -29,7 +40,10 @@ public class TTTUltimate implements ITTTObj {
             tttGrid.update(deltaTime);
             
         }
-
+        if (Main.EnableAI) {
+         tttai.update(deltaTime);
+        }
+       
         bigGrid.update(deltaTime);
     }
 
@@ -78,6 +92,7 @@ public class TTTUltimate implements ITTTObj {
             reset();
             return;
         }
+        
 
         int currentX = -1;
         int currentY = -1;
@@ -97,12 +112,26 @@ public class TTTUltimate implements ITTTObj {
             
         }     
         
+        boolean multipleGridsCurrently = setActiveGrid(currentX, currentY);
+
+      if (Main.EnableAI){
+         	if(symbolIndex % 2 == 1) {
+            tttai.makeMove(grids, multipleGridsCurrently, symbolIndex);
+            symbolIndex++;
+        }
+      }
+        
+    }
+
+
+    public boolean setActiveGrid(int currentX, int currentY) {
         if (currentX >= 0 && currentY >= 0) {
             for (TTTGrid tttGrid : grids) {
                 if (tttGrid.getX() == currentX && tttGrid.getY() == currentY) {
                     if (tttGrid.gameEnded()) {
                         setGridsActive();
-                        return;
+                        return true;
+
                     }
 
                     tttGrid.setActive(true);
@@ -112,7 +141,7 @@ public class TTTUltimate implements ITTTObj {
                 
             }
         }
-    
+        return false;
     }
 
 
@@ -126,7 +155,13 @@ public class TTTUltimate implements ITTTObj {
     public void mouseMoved(MouseEvent e) {
         if (bigGrid.gameEnded()) {
             return;
-        }
+         }
+        if (Main.EnableAI){
+            if (tttai.isMoving()){
+               return;
+            }
+         }
+        
         for (TTTGrid tttGrid : grids) {
             tttGrid.mouseMoved(e);
             
