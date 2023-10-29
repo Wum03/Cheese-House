@@ -164,8 +164,8 @@ public class TTTGrid implements ITTTObj {
                 renderTTTGrid(graphicsRender);
 
             }
-       // } else {
-         //   renderTTTGrid(graphicsRender);
+        } else {
+           renderTTTGrid(graphicsRender);
             
         }
         
