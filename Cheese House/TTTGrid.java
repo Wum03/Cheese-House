@@ -81,11 +81,12 @@ public class TTTGrid implements ITTTObj {
    
     @Override
     public void update(float deltaTime) {
-        for (PlaceTTT placeTTT : places) {
-            placeTTT.update(deltaTime);
-        }
-        
         if (Main.GoUltimate){
+            for (PlaceTTT placeTTT : places) {
+             placeTTT.update(deltaTime);
+            }
+        
+        
             for (int x = 0; x < symbols.length; x++) {
                 for (int y = 0; y < symbols.length; y++) {
                     if (symbols[x][y] == null) {
@@ -99,7 +100,17 @@ public class TTTGrid implements ITTTObj {
             } else {
                 for (PlaceTTT placeTTT : places) {
                     placeTTT.update(deltaTime);
+
                     
+                }
+                for (int x = 0; x < symbols.length; x++){
+                    for (int y = 0; y < symbols.length; y++){
+                        if (symbols[x][y] == null) {
+                            continue;
+                        }
+
+                        symbols[x][y].update(deltaTime);
+                    }
                 }
             }
     }
@@ -109,13 +120,13 @@ public class TTTGrid implements ITTTObj {
         if (isActive && drawActive) {
             drawActive(graphicsRender);
         }
-
+        if (Main.GoUltimate){
         for (PlaceTTT placeTTT : places) {
             placeTTT.render(graphicsRender);
         }
 
 
-        if (Main.GoUltimate){
+        
             for (int x = 0; x < symbols.length; x++) {
                 for (int y = 0; y < symbols.length; y++) {
                     if (symbols[x][y] == null) {
@@ -132,13 +143,26 @@ public class TTTGrid implements ITTTObj {
                     placeTTT.render(graphicsRender);
                     
                 }
+                for (int x = 0; x < symbols.length; x++){
+                    for (int y = 0; y < symbols.length; y++){
+                        if (symbols[x][y] == null) {
+                            continue;
+                        }
+
+                        symbols[x][y].render(graphicsRender);
+                    }
+                }
                 
+               
             }
 
-       
-        if (drawGrid) {
-            renderTTTGrid(graphicsRender);
+        if (Main.GoUltimate) {
+            if (drawGrid) {
+                renderTTTGrid(graphicsRender);
 
+            }
+        } else {
+            renderTTTGrid(graphicsRender);
         }
         
        
@@ -225,6 +249,12 @@ public class TTTGrid implements ITTTObj {
     } else {
         for (PlaceTTT placeTTT : places) {
             if (placeTTT.isActive()) {
+                
+                int x = placeTTT.getxIn();
+                int y = placeTTT.getyIn();
+
+                symbols[x][y] = new TTTSymbols(x, y, symbolIndex);
+                
                 symbolIndex++;
             }
         }

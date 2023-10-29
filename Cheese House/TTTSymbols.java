@@ -23,14 +23,17 @@ public class TTTSymbols implements ITTTObj{
         this.size = size;
 
         this.type = type % 2;
+        if (Main.GoUltimate) {
 
+        
         String symbolType = this.type == 0 ? "cheese" : "house";
 
         try {
             symbol = ImageIO.read(new File("Cheese House/big_XO/" + symbolType + ".png"));
         } catch (Exception e) {
             e.printStackTrace();
-        }    
+        }   
+    }
 
     }
 
@@ -46,6 +49,8 @@ public class TTTSymbols implements ITTTObj{
         this.x = x;
         this.y= y;
         this.type = type %2;
+       
+        if (!Main.GoUltimate) {
         String symbolType = this.type == 0 ? "cheese" : "house";
 
         try {
@@ -53,6 +58,7 @@ public class TTTSymbols implements ITTTObj{
         } catch (Exception e) {
             e.printStackTrace();
         }  
+    }
     }
 
 
@@ -68,7 +74,7 @@ public class TTTSymbols implements ITTTObj{
         if (Main.GoUltimate){
             graphicsRender.drawImage(symbol, startX + x * size, startY + y * size, size, size, null);
         } else {
-            graphicsRender.drawImage(symbol, x, y, size, size, null);
+            graphicsRender.drawImage(symbol, x * size, y * size, size, size, null);
         }
     }
 
