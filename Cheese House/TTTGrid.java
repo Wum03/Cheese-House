@@ -15,7 +15,7 @@ public class TTTGrid implements ITTTObj {
 
     private boolean gameEnd = false;
     private boolean isActive = true;
-
+    private boolean fadeIn = false;
     private int winner = -1;
 
     private ArrayList<PlaceTTT> places = new ArrayList<PlaceTTT>(Main.SIZE);
@@ -32,6 +32,21 @@ public class TTTGrid implements ITTTObj {
     private boolean drawGrid = true;
     private boolean drawActive = true;
     
+    public TTTGrid() {
+
+        symbols =  new TTTSymbols[Main.ROWS][Main.ROWS];
+        
+        for (int i = 0; i < Main.SIZE; i++) {
+            int xIn = i % Main.ROWS;
+            int yIn = i / Main.ROWS;
+            int size = Main.WIDTH / Main.ROWS;
+            places.add(new PlaceTTT(xIn * size, yIn * size, xIn, yIn, size, size));
+        }
+
+        reset();
+
+    }
+
     public TTTGrid(int x, int y, int size, boolean drawGrid, boolean drawActive) {
         this(x, y, size);
 
@@ -66,21 +81,38 @@ public class TTTGrid implements ITTTObj {
    
     @Override
     public void update(float deltaTime) {
-        for (PlaceTTT placeTTT : places) {
-            placeTTT.update(deltaTime);
-        }
-        
-        for (int x = 0; x < symbols.length; x++) {
-            for (int y = 0; y < symbols.length; y++) {
-                if (symbols[x][y] == null) {
-                    continue;
-                }
-
-                symbols[x][y].update(deltaTime);
-                
+        if (Main.GoUltimate){
+            for (PlaceTTT placeTTT : places) {
+             placeTTT.update(deltaTime);
             }
-            
-        }
+        
+        
+            for (int x = 0; x < symbols.length; x++) {
+                for (int y = 0; y < symbols.length; y++) {
+                    if (symbols[x][y] == null) {
+                        continue;
+                    }
+    
+                    symbols[x][y].update(deltaTime);
+                    
+                }
+            }
+            } else {
+                for (PlaceTTT placeTTT : places) {
+                    placeTTT.update(deltaTime);
+
+                    
+                }
+                for (int x = 0; x < symbols.length; x++){
+                    for (int y = 0; y < symbols.length; y++){
+                        if (symbols[x][y] == null) {
+                            continue;
+                        }
+
+                        symbols[x][y].update(deltaTime);
+                    }
+                }
+            }
     }
 
     @Override
@@ -88,28 +120,53 @@ public class TTTGrid implements ITTTObj {
         if (isActive && drawActive) {
             drawActive(graphicsRender);
         }
-
+        if (Main.GoUltimate){
         for (PlaceTTT placeTTT : places) {
             placeTTT.render(graphicsRender);
         }
 
 
-        for (int x = 0; x < symbols.length; x++) {
-            for (int y = 0; y < symbols.length; y++) {
-                if (symbols[x][y] == null) {
-                    continue;
+        
+            for (int x = 0; x < symbols.length; x++) {
+                for (int y = 0; y < symbols.length; y++) {
+                    if (symbols[x][y] == null) {
+                        continue;
+                    }
+    
+                    symbols[x][y].render(graphicsRender);
+                    
                 }
-
-                symbols[x][y].render(graphicsRender);
                 
             }
+            } else {
+                renderTTTGrid(graphicsRender);
+                for (PlaceTTT placeTTT : places) {
+                    placeTTT.render(graphicsRender);
+                    
+                }
+                for (int x = 0; x < symbols.length; x++){
+                    for (int y = 0; y < symbols.length; y++){
+                        if (symbols[x][y] == null) {
+                            continue;
+                            
+                        }
+
+                        symbols[x][y].render(graphicsRender);
+                        
+                    }
+                }
+                
+               
+            }
+
+        if (Main.GoUltimate) {
+            if (drawGrid) {
+                renderTTTGrid(graphicsRender);
+
+            }
+       // } else {
+         //   renderTTTGrid(graphicsRender);
             
-        }
-
-       
-        if (drawGrid) {
-            renderTTTGrid(graphicsRender);
-
         }
         
        
@@ -125,7 +182,7 @@ public class TTTGrid implements ITTTObj {
 
     private void renderTTTGrid(Graphics2D graphicsRender) {
         graphicsRender.setColor(new Color(248, 208, 48));
-
+        if (Main.GoUltimate) {
         int rowSize = size / Main.ROWS;
         for (int i = 0; i < Main.ROWS + 1; i++) {
             int outsideSize = lineSize;
@@ -138,11 +195,20 @@ public class TTTGrid implements ITTTObj {
 
             
         }
-
+    } else {
+            int rowsize = Main.WIDTH / Main.ROWS;
+                for (int x = 0; x < Main.ROWS + 1; x++) {
+                    graphicsRender.fillRect(x * rowsize- (lineSize / 2), 0, lineSize, Main.WIDTH);
+                    for (int y = 0; y < Main.ROWS + 1; y++) {
+                      graphicsRender.fillRect(0, y * rowsize - (lineSize / 2), Main.WIDTH, lineSize);
+     
+                    }
+                }
+            }
         graphicsRender.setColor(Color.WHITE);
 
         if (gameEnd) {
-            //drawEndGameOverlay(graphicsRender);
+            drawEndGameOverlay(graphicsRender);
         }
     
         
@@ -151,9 +217,39 @@ public class TTTGrid implements ITTTObj {
 
     
 
+    private void drawEndGameOverlay(Graphics2D graphicsRender) {
+        
+        if (!Main.GoUltimate) {
+        graphicsRender.setColor(new Color(0, 0, 0, (int) (400 * 0.5f)));
+
+        graphicsRender.fillRect(0, 0, Main.WIDTH, Main.HEIGHT);
+        graphicsRender.setColor(Color.WHITE);
+
+
+        
+        if (winner == -1) {
+            graphicsRender.drawString("Cheese Housing", 200, 240);
+            
+            
+        } else {
+            graphicsRender.drawString(winner == 0 ? "Cheese" : "House", 280, 280);
+
+        }
+        
+        graphicsRender.drawString("click again to restart...", 200, 340);
+
+    }
+    }
+
     public void mouseMoved(MouseEvent e) {
-        if (!isActive) {
-            return;
+        if (Main.GoUltimate){
+            if (!isActive) {
+                return;
+            }
+        } else {
+            if(gameEnded()) {
+                return;
+            }
         }
 
         for (PlaceTTT placeTTT : places) {
@@ -169,6 +265,7 @@ public class TTTGrid implements ITTTObj {
     }
 
     public PlaceTTT mouseReleased(MouseEvent e) {
+        if (Main.GoUltimate) {
         for (PlaceTTT placeTTT : places) {
             if (placeTTT.isActive()) {
 
@@ -183,6 +280,34 @@ public class TTTGrid implements ITTTObj {
             }
         }
         return null;
+    } else {
+        setSymbolIndex(symbolIndex);
+        for (PlaceTTT placeTTT : places) {
+            if (placeTTT.isActive()) {
+                placeTTT.set(true);
+                int x = placeTTT.getxIn();
+                int y = placeTTT.getyIn();
+
+                symbols[x][y] = new TTTSymbols(x, y, symbolIndex);
+                
+                symbolIndex++;
+
+                ArrayList<TTTSymbols> winLine = WinCheck.winChecker(symbols);
+                if (winLine != null){
+                    winner = winLine.get(0).getType();
+                    
+                    gameEnd = true;
+
+                } else if (symbolIndex >= Main.SIZE) {
+                    
+                    gameEnd = true;
+                }
+            }
+        }
+        } return null;
+        
+        
+
     }
 
     public void placeSymbol(int moveIndex) {
@@ -264,12 +389,14 @@ public class TTTGrid implements ITTTObj {
         this.isActive = isActive;
     }
 
-    public int getTurn() {   // Has to be equal to something but what?
+    public int getTurn() {   
         return symbolIndex % 2;
     }
 
     public boolean isActive() {
+      
         return isActive;
+    
     }
 
     public void setSymbolIndex(int symbolIndex){

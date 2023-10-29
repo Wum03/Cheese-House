@@ -38,7 +38,9 @@ public class WinCheck {
         ArrayList<TTTSymbols> win = new ArrayList<TTTSymbols>(Main.WIN);
         int type = -1;
         int countCheck = 0;
+        if (Main.GoUltimate) {
 
+        
         while (countCheck < Main.ROWS && index < Main.SIZE && x >= 0 && x <= Main.ROWS - 1 
             && y >= 0 && y <= Main.ROWS - 1) {
 
@@ -71,6 +73,41 @@ public class WinCheck {
 
 
         return win.size() >= Main.WIN ? win : null;
+    } else {
+        while (countCheck < Main.ROWS && index < Main.SIZE && x >= 0 && x <= Main.ROWS - 1 
+            && y >= 0 && y <= Main.ROWS - 1) {
+
+            boolean winFind = false;
+            TTTSymbols symbols = winSymbols[x][y];
+
+            if (symbols != null) {
+                if (type == -1) {
+                    type = symbols.getType();
+                }
+
+                if (symbols.getType() == type) {
+                    win.add(symbols);
+                    winFind = true;
+                }
+
+            }
+
+            if (!winFind && win.size() < Main.WIN){
+                win.clear();
+                type = -1;
+            }
+
+            x += dX;
+            y += dY;
+            index++;
+            countCheck++;
+
+        }
+
+
+
+        return win.size() >= Main.WIN ? win : null;
+    }
     }
 
     public static int getWinType(TTTSymbols[][] symbols) {

@@ -22,8 +22,10 @@ public class TTTUltimate implements ITTTObj {
         }
 
         bigGrid = new TTTGrid(0, 0, Main.WIDTH, false, false);
+        if (Main.EnableAI) {
+         tttai = new TTTAI(bigGrid, this);
+        }
         
-        tttai = new TTTAI(bigGrid, this);
         
 
 
@@ -38,8 +40,10 @@ public class TTTUltimate implements ITTTObj {
             tttGrid.update(deltaTime);
             
         }
-        
-        tttai.update(deltaTime);
+        if (Main.EnableAI) {
+         tttai.update(deltaTime);
+        }
+       
         bigGrid.update(deltaTime);
     }
 
@@ -110,11 +114,13 @@ public class TTTUltimate implements ITTTObj {
         
         boolean multipleGridsCurrently = setActiveGrid(currentX, currentY);
 
-
-        if(symbolIndex % 2 == 1) {
+      if (Main.EnableAI){
+         	if(symbolIndex % 2 == 1) {
             tttai.makeMove(grids, multipleGridsCurrently, symbolIndex);
             symbolIndex++;
         }
+      }
+        
     }
 
 
@@ -147,9 +153,15 @@ public class TTTUltimate implements ITTTObj {
 
 
     public void mouseMoved(MouseEvent e) {
-        if (bigGrid.gameEnded()|| tttai.isMoving()) {
+        if (bigGrid.gameEnded()) {
             return;
-        }
+         }
+        if (Main.EnableAI){
+            if (tttai.isMoving()){
+               return;
+            }
+         }
+        
         for (TTTGrid tttGrid : grids) {
             tttGrid.mouseMoved(e);
             

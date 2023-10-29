@@ -11,7 +11,8 @@ public class Main {
     public static int ROWS = 3;
     public static int WIN = 3;
     public static int SIZE = ROWS * ROWS;
-
+    public static boolean EnableAI = true;
+    public static boolean GoUltimate = false;
     //if rows < win then error message...?
     
 
@@ -22,6 +23,11 @@ public class Main {
             System.out.println("win variable cannot be larger than rows variable");
             return;
         }
+        if (EnableAI && ROWS > 3) {
+            System.out.println("disable AI to play on larger sized grids");
+            return;  
+        }
+
         JFrame frame = new JFrame("Tic Tac Toe");
         TTTGame game = new TTTGame(new Color(121, 59, 49)); //121
         

@@ -79,7 +79,7 @@ public class TTTMiniMax {
     }
 
     private int getMin(ArrayList<Integer> scores) {
-        int index= 0;
+        int index = 0;
         int min = 0;
         for(int i = 0; i < scores.size(); i++){
             if (scores.get(i) <= min) {

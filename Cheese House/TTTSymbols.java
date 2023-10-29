@@ -16,6 +16,7 @@ public class TTTSymbols implements ITTTObj{
     private int size;
 
     public TTTSymbols(int x, int y, int startX, int startY, int size, int type) {
+       
         this.x = x;
         this.y = y;
         this.startX = startX;
@@ -23,14 +24,17 @@ public class TTTSymbols implements ITTTObj{
         this.size = size;
 
         this.type = type % 2;
+         if (Main.GoUltimate) {
 
+        
         String symbolType = this.type == 0 ? "cheese" : "house";
 
         try {
             symbol = ImageIO.read(new File("Cheese House/big_XO/" + symbolType + ".png"));
         } catch (Exception e) {
             e.printStackTrace();
-        }    
+        }   
+    }
 
     }
 
@@ -38,8 +42,26 @@ public class TTTSymbols implements ITTTObj{
 
 
     public TTTSymbols(int type) {
+        if (Main.GoUltimate) {
         this.type = type % 2;
+        }
+    }
 
+    public TTTSymbols(int x, int y, int type){
+        this.x = x;
+        this.y= y;
+        this.type = type %2;
+       
+        if (!Main.GoUltimate) {
+        String symbolType = this.type == 0 ? "cheese" : "house";
+        
+        try {
+            symbol = ImageIO.read(new File("Cheese House/big_XO/" + symbolType + ".png"));
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }  
+    }
     }
 
 
@@ -52,8 +74,12 @@ public class TTTSymbols implements ITTTObj{
     @Override
     public void render(Graphics2D graphicsRender) {
         int size = this.size / Main.ROWS;
-
-        graphicsRender.drawImage(symbol, startX + x * size, startY + y * size, size, size, null);
+        if (Main.GoUltimate){
+            graphicsRender.drawImage(symbol, startX + x * size, startY + y * size, size, size, null);
+        } else {
+            graphicsRender.drawImage(symbol, x * Main.WIDTH / Main.ROWS, y * Main.WIDTH / Main.ROWS, Main.WIDTH / Main.ROWS, Main.WIDTH / Main.ROWS, null);
+           
+        }
     }
 
 
