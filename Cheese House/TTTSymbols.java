@@ -42,6 +42,19 @@ public class TTTSymbols implements ITTTObj{
 
     }
 
+    public TTTSymbols(int x, int y, int type){
+        this.x = x;
+        this.y= y;
+        this.type = type %2;
+        String symbolType = this.type == 0 ? "cheese" : "house";
+
+        try {
+            symbol = ImageIO.read(new File("Cheese House/big_XO/" + symbolType + ".png"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }  
+    }
+
 
 
 
@@ -52,8 +65,11 @@ public class TTTSymbols implements ITTTObj{
     @Override
     public void render(Graphics2D graphicsRender) {
         int size = this.size / Main.ROWS;
-
-        graphicsRender.drawImage(symbol, startX + x * size, startY + y * size, size, size, null);
+        if (Main.GoUltimate){
+            graphicsRender.drawImage(symbol, startX + x * size, startY + y * size, size, size, null);
+        } else {
+            graphicsRender.drawImage(symbol, x, y, size, size, null);
+        }
     }
 
 

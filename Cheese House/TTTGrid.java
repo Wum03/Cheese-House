@@ -15,7 +15,7 @@ public class TTTGrid implements ITTTObj {
 
     private boolean gameEnd = false;
     private boolean isActive = true;
-
+    private boolean fadeIn = false;
     private int winner = -1;
 
     private ArrayList<PlaceTTT> places = new ArrayList<PlaceTTT>(Main.SIZE);
@@ -32,6 +32,21 @@ public class TTTGrid implements ITTTObj {
     private boolean drawGrid = true;
     private boolean drawActive = true;
     
+    public TTTGrid() {
+
+        symbols =  new TTTSymbols[Main.ROWS][Main.ROWS];
+        
+        for (int i = 0; i < Main.SIZE; i++) {
+            int xIn = i % Main.ROWS;
+            int yIn = i / Main.ROWS;
+            int size = Main.WIDTH / Main.ROWS;
+            places.add(new PlaceTTT(xIn * size, yIn * size, xIn, yIn, size, size));
+        }
+
+        reset();
+
+    }
+
     public TTTGrid(int x, int y, int size, boolean drawGrid, boolean drawActive) {
         this(x, y, size);
 
@@ -70,17 +85,23 @@ public class TTTGrid implements ITTTObj {
             placeTTT.update(deltaTime);
         }
         
-        for (int x = 0; x < symbols.length; x++) {
-            for (int y = 0; y < symbols.length; y++) {
-                if (symbols[x][y] == null) {
-                    continue;
+        if (Main.GoUltimate){
+            for (int x = 0; x < symbols.length; x++) {
+                for (int y = 0; y < symbols.length; y++) {
+                    if (symbols[x][y] == null) {
+                        continue;
+                    }
+    
+                    symbols[x][y].update(deltaTime);
+                    
                 }
-
-                symbols[x][y].update(deltaTime);
-                
             }
-            
-        }
+            } else {
+                for (PlaceTTT placeTTT : places) {
+                    placeTTT.update(deltaTime);
+                    
+                }
+            }
     }
 
     @Override
@@ -94,17 +115,25 @@ public class TTTGrid implements ITTTObj {
         }
 
 
-        for (int x = 0; x < symbols.length; x++) {
-            for (int y = 0; y < symbols.length; y++) {
-                if (symbols[x][y] == null) {
-                    continue;
+        if (Main.GoUltimate){
+            for (int x = 0; x < symbols.length; x++) {
+                for (int y = 0; y < symbols.length; y++) {
+                    if (symbols[x][y] == null) {
+                        continue;
+                    }
+    
+                    symbols[x][y].render(graphicsRender);
+                    
                 }
-
-                symbols[x][y].render(graphicsRender);
                 
             }
-            
-        }
+            } else {
+                for (PlaceTTT placeTTT : places) {
+                    placeTTT.render(graphicsRender);
+                    
+                }
+                
+            }
 
        
         if (drawGrid) {
@@ -125,7 +154,7 @@ public class TTTGrid implements ITTTObj {
 
     private void renderTTTGrid(Graphics2D graphicsRender) {
         graphicsRender.setColor(new Color(248, 208, 48));
-
+        if (Main.GoUltimate) {
         int rowSize = size / Main.ROWS;
         for (int i = 0; i < Main.ROWS + 1; i++) {
             int outsideSize = lineSize;
@@ -138,7 +167,16 @@ public class TTTGrid implements ITTTObj {
 
             
         }
-
+    } else {
+            int rowsize = Main.WIDTH / Main.ROWS;
+                for (int x = 0; x < Main.ROWS + 1; x++) {
+                    graphicsRender.fillRect(x * rowsize- (lineSize / 2), 0, lineSize, Main.WIDTH);
+                    for (int y = 0; y < Main.ROWS + 1; y++) {
+                      graphicsRender.fillRect(0, y * rowsize - (lineSize / 2), Main.WIDTH, lineSize);
+     
+                    }
+                }
+            }
         graphicsRender.setColor(Color.WHITE);
 
         if (gameEnd) {
@@ -169,6 +207,7 @@ public class TTTGrid implements ITTTObj {
     }
 
     public PlaceTTT mouseReleased(MouseEvent e) {
+        if (Main.GoUltimate) {
         for (PlaceTTT placeTTT : places) {
             if (placeTTT.isActive()) {
 
@@ -183,6 +222,15 @@ public class TTTGrid implements ITTTObj {
             }
         }
         return null;
+    } else {
+        for (PlaceTTT placeTTT : places) {
+            if (placeTTT.isActive()) {
+                symbolIndex++;
+            }
+        }
+        } return null;
+        
+
     }
 
     public void placeSymbol(int moveIndex) {
@@ -269,7 +317,11 @@ public class TTTGrid implements ITTTObj {
     }
 
     public boolean isActive() {
-        return isActive;
+        if (Main.GoUltimate) {
+            return isActive;
+        } else {
+            return fadeIn;
+        }
     }
 
     public void setSymbolIndex(int symbolIndex){
