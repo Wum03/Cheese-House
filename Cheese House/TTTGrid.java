@@ -139,6 +139,7 @@ public class TTTGrid implements ITTTObj {
                 
             }
             } else {
+                renderTTTGrid(graphicsRender);
                 for (PlaceTTT placeTTT : places) {
                     placeTTT.render(graphicsRender);
                     
@@ -147,9 +148,11 @@ public class TTTGrid implements ITTTObj {
                     for (int y = 0; y < symbols.length; y++){
                         if (symbols[x][y] == null) {
                             continue;
+                            
                         }
 
                         symbols[x][y].render(graphicsRender);
+                        
                     }
                 }
                 
@@ -161,8 +164,9 @@ public class TTTGrid implements ITTTObj {
                 renderTTTGrid(graphicsRender);
 
             }
-        } else {
-            renderTTTGrid(graphicsRender);
+       // } else {
+         //   renderTTTGrid(graphicsRender);
+            
         }
         
        
@@ -204,7 +208,7 @@ public class TTTGrid implements ITTTObj {
         graphicsRender.setColor(Color.WHITE);
 
         if (gameEnd) {
-            //drawEndGameOverlay(graphicsRender);
+            drawEndGameOverlay(graphicsRender);
         }
     
         
@@ -213,9 +217,39 @@ public class TTTGrid implements ITTTObj {
 
     
 
+    private void drawEndGameOverlay(Graphics2D graphicsRender) {
+        
+        if (!Main.GoUltimate) {
+        graphicsRender.setColor(new Color(0, 0, 0, (int) (400 * 0.5f)));
+
+        graphicsRender.fillRect(0, 0, Main.WIDTH, Main.HEIGHT);
+        graphicsRender.setColor(Color.WHITE);
+
+
+        
+        if (winner == -1) {
+            graphicsRender.drawString("Cheese Housing", 200, 240);
+            
+            
+        } else {
+            graphicsRender.drawString(winner == 0 ? "Cheese" : "House", 280, 280);
+
+        }
+        
+        graphicsRender.drawString("click again to restart...", 200, 340);
+
+    }
+    }
+
     public void mouseMoved(MouseEvent e) {
-        if (!isActive) {
-            return;
+        if (Main.GoUltimate){
+            if (!isActive) {
+                return;
+            }
+        } else {
+            if(gameEnded()) {
+                return;
+            }
         }
 
         for (PlaceTTT placeTTT : places) {
@@ -247,18 +281,31 @@ public class TTTGrid implements ITTTObj {
         }
         return null;
     } else {
+        setSymbolIndex(symbolIndex);
         for (PlaceTTT placeTTT : places) {
             if (placeTTT.isActive()) {
-                
+                placeTTT.set(true);
                 int x = placeTTT.getxIn();
                 int y = placeTTT.getyIn();
 
                 symbols[x][y] = new TTTSymbols(x, y, symbolIndex);
                 
                 symbolIndex++;
+
+                ArrayList<TTTSymbols> winLine = WinCheck.winChecker(symbols);
+                if (winLine != null){
+                    winner = winLine.get(0).getType();
+                    
+                    gameEnd = true;
+
+                } else if (symbolIndex >= Main.SIZE) {
+                    
+                    gameEnd = true;
+                }
             }
         }
         } return null;
+        
         
 
     }
@@ -342,16 +389,14 @@ public class TTTGrid implements ITTTObj {
         this.isActive = isActive;
     }
 
-    public int getTurn() {   // Has to be equal to something but what?
+    public int getTurn() {   
         return symbolIndex % 2;
     }
 
     public boolean isActive() {
-        if (Main.GoUltimate) {
-            return isActive;
-        } else {
-            return fadeIn;
-        }
+      
+        return isActive;
+    
     }
 
     public void setSymbolIndex(int symbolIndex){

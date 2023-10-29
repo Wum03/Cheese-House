@@ -74,10 +74,15 @@ public class TTTGame extends PanelTTT implements MouseListener, MouseMotionListe
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        
+
 
         if (Main.GoUltimate) {
             ultimate.mouseReleased(e);
         } else {
+            if (tttGrid.gameEnded()){
+                tttGrid.reset();
+            }
             tttGrid.mouseReleased(e);
         }
         
