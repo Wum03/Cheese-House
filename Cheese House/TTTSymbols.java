@@ -15,6 +15,10 @@ public class TTTSymbols implements ITTTObj{
     private int type;
     private int size;
 
+    private float scale = 2;
+    private boolean animateIn;
+    private float scaleSpeed = 0.1f;
+
     public TTTSymbols(int x, int y, int startX, int startY, int size, int type) {
        
         this.x = x;
@@ -22,6 +26,7 @@ public class TTTSymbols implements ITTTObj{
         this.startX = startX;
         this.startY = startY;
         this.size = size;
+        this.animateIn = true;
 
         this.type = type % 2;
          if (Main.GoUltimate) {
@@ -69,17 +74,37 @@ public class TTTSymbols implements ITTTObj{
 
     @Override
     public void update(float deltaTime) {
+        if(animateIn) {
+            scaleIn(deltaTime);
+        }
     }
+
+    private void scaleIn(float deltaTime) {
+        scale -= scaleSpeed * deltaTime;
+
+        if(scale < 1) {
+            scale =1;
+            animateIn = false;
+        }
+    }
+
+
+
 
     @Override
     public void render(Graphics2D graphicsRender) {
         int size = this.size / Main.ROWS;
+
+        int symbolSize = (int)(size * scale);
+        int pivot = (size - symbolSize) /2;
+
         if (Main.GoUltimate){
-            graphicsRender.drawImage(symbol, startX + x * size, startY + y * size, size, size, null);
+            graphicsRender.drawImage(symbol, startX + x * size + pivot, startY + y * size + pivot, symbolSize, symbolSize, null);
         } else {
             graphicsRender.drawImage(symbol, x * Main.WIDTH / Main.ROWS, y * Main.WIDTH / Main.ROWS, Main.WIDTH / Main.ROWS, Main.WIDTH / Main.ROWS, null);
            
         }
+
     }
 
 
