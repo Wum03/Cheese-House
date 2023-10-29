@@ -11,7 +11,8 @@ public class Main {
     public static int ROWS = 3;
     public static int WIN = 3;
     public static int SIZE = ROWS * ROWS;
-
+    public static boolean EnableAI = false;
+    public static boolean GoUltimate = false;
     //if rows < win then error message...?
     
 
